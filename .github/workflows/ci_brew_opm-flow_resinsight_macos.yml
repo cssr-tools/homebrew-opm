@@ -1,0 +1,43 @@
+name: Install OPM Flow and ResInsight in macOS using brew
+
+on:
+ push:
+   branches:
+     - main
+ pull_request:
+   
+jobs:
+  install-resinsight-flow-macOS-local:
+    timeout-minutes: 120
+    runs-on: macos-26
+    steps:
+
+    - name: Set up Python 3.14
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.14
+
+    - name: Install ResInsight
+      run: |
+        brew install cssr-tools/opm/resinsight
+        which resinsight
+    
+    - name: Install OPM Flow
+      run: |
+        brew install cssr-tools/opm/opm-simulators
+        which flow
+
+    - name: Run OPM Flow (in parallel)
+      run: |
+        curl -O https://raw.githubusercontent.com/OPM/opm-tests/refs/heads/master/spe1/SPE1CASE1.DATA
+        mpirun -np 2 flow SPE1CASE1.DATA --output-dir=flow_spe1case1
+
+    - name: Check if OPM Flow succeeded
+      run: |
+        file="/Users/runner/work/homebrew-opm/homebrew-opm/flow_spe1case1/SPE1CASE1.UNRST"
+        if [[ -f "$file" ]]; then
+          echo "The installation of OPM Flow succeeded"
+        else
+          echo "The installation of OPM Flow failed"
+          exit 1
+        fi

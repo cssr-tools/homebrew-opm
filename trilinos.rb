@@ -7,8 +7,6 @@ class Trilinos < Formula
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-
-  # Common Trilinos dependencies
   depends_on "boost"
   depends_on "open-mpi"
   depends_on "suite-sparse"
