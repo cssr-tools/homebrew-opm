@@ -1,0 +1,47 @@
+name: Install OPM Flow in macOS using brew
+
+on:
+ push:
+   branches:
+     - main
+ pull_request:
+   
+jobs:
+  run-pycopm-local:
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.14']
+        os: [macos-latest]
+        
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install OPM Flow
+      run: |
+        brew install cssr-tools/opm/opm-simulators
+
+    - name: Run OPM Flow (in parallel)
+      run: |
+        curl -O https://raw.githubusercontent.com/daavid00/opm-tests/refs/heads/master/spe1/SPE1CASE1.DATA
+        mpirun -np 4 flow SPE1CASE1.DATA --output-dir=flow_spe1case1
+
+    - name: Check if OPM Flow succeeded
+      run: |
+        file="/Users/runner/work/brew-opm/brew-opm/flow_spe1case1/SPE1CASE1.UNRST"
+        if [[ -f "$file" ]]; then
+          echo "The installation of OPM Flow succeeded"
+        else
+          echo "The installation of OPM Flow failed"
+          exit 1
+        fi
