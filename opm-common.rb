@@ -17,6 +17,7 @@ class OpmCommon < Formula
   depends_on "dune-geometry"
   depends_on "dune-grid"
   depends_on "dune-istl"
+  depends_on "trilinos"
   depends_on "pybind11"
 
   def install
