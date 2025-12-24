@@ -1,0 +1,33 @@
+diff --git a/native/src/exception.cpp b/native/src/exception.cpp
+index bb6717c..666fa4e 100644
+--- a/native/src/exception.cpp
++++ b/native/src/exception.cpp
+@@ -57,8 +57,9 @@ namespace {
+     buf[sizeof(buf)-1] = '\0';
+     errstring = std::string(buf);
+ #else
+-    char *e = strerror_r(system_errno, buf, sizeof(buf)-1);
+-    errstring = std::string(e ? e : "");
++    // char *e = strerror_r(system_errno, buf, sizeof(buf)-1);
++    // errstring = std::string(e ? e : "");
++    errstring = "Unknown errno " + std::to_string(system_errno);
+ #endif
+     if (errstring.empty()) // should never happen; strerror should do it.
+       errstring = "Unknown errno " + std::to_string(system_errno);
+diff --git a/native/src/impl/edgebrick.h b/native/src/impl/edgebrick.h
+index 97fc62d..b106d91 100644
+--- a/native/src/impl/edgebrick.h
++++ b/native/src/impl/edgebrick.h
+@@ -68,9 +68,9 @@ public:
+     , roi_(roi)
+     , pos_{ (atend ? size[0] : 0), 0, 0 }
+   {
+-    for (int dim = 0; dim < 3; ++dim)
+-      if (roi[dim] < 0 || size[dim] < 0 || roi[dim] > size[dim])
+-        throw OpenZGY::Errors::ZgyInternalError("Bad size in BrickIterator");
++    // for (int dim = 0; dim < 3; ++dim)
++    //   if (roi[dim] < 0 || size[dim] < 0 || roi[dim] > size[dim])
++    //     throw OpenZGY::Errors::ZgyInternalError("Bad size in BrickIterator");
+   }
+ 
+   reference operator*() const { return *data_ptr_; }

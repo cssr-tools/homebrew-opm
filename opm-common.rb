@@ -19,6 +19,7 @@ class OpmCommon < Formula
   depends_on "dune-istl"
   depends_on "trilinos"
   depends_on "pybind11"
+  depends_on "python3"
 
   def install
     mkdir "build" do

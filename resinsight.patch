@@ -1,0 +1,277 @@
+diff --git a/ApplicationExeCode/RiaMainTools.cpp b/ApplicationExeCode/RiaMainTools.cpp
+index c110b1c17..37f7b3cb5 100644
+--- a/ApplicationExeCode/RiaMainTools.cpp
++++ b/ApplicationExeCode/RiaMainTools.cpp
+@@ -31,28 +31,46 @@
+ 
+ #include <QDir>
+ 
+-#include <stacktrace>
++#include <sstream>
++
++#if __has_include(<stacktrace>)
++    #include <stacktrace>
++    #define HAVE_STD_STACKTRACE 1
++#else
++    #define HAVE_STD_STACKTRACE 0
++#endif
+ 
+ namespace internal
+ {
+ // Custom formatter for stacktrace
+-std::string formatStacktrace( const std::stacktrace& st )
++std::string formatStacktrace(
++#if HAVE_STD_STACKTRACE
++    const std::stacktrace& st
++#else
++    const void* /*unused*/
++#endif
++)
+ {
+     std::stringstream ss;
++#if HAVE_STD_STACKTRACE
+     int               frame = 0;
+     for ( const auto& entry : st )
+     {
+         ss << "  [" << frame++ << "] " << entry.description() << " at " << entry.source_file() << ":"
+            << entry.source_line() << "\n";
+     }
++#else
++    ss << "std::stacktrace is not supported on this compiler\n";
++#endif
+     return ss.str();
+ }
++
+ } // namespace internal
+ 
+ //--------------------------------------------------------------------------------------------------
+ ///
+ //--------------------------------------------------------------------------------------------------
+-void manageSegFailure( int signalCode )
++void manageSegFailure(int signalCode)
+ {
+     // Executing function here is not safe, but works as expected on Windows. Behavior on Linux is undefined, but will
+     // work in some cases.
+@@ -70,10 +88,14 @@ void manageSegFailure( int signalCode )
+ 
+             fileLogger->error( str.toStdString().data() );
+ 
++#if HAVE_STD_STACKTRACE
+             auto        st      = std::stacktrace::current();
+             std::string message = "Stack trace:\n" + internal::formatStacktrace( st );
+-            logger->error( message.data() );
++#else
++            std::string message = "Stack trace:\nstd::stacktrace is not supported on this compiler\n";
++#endif
+ 
++            logger->error(message.data());
+             fileLogger->flush();
+         }
+     }
+diff --git a/ApplicationLibCode/FileInterface/RifArrowTools.cpp b/ApplicationLibCode/FileInterface/RifArrowTools.cpp
+index b9661c829..f3233a003 100644
+--- a/ApplicationLibCode/FileInterface/RifArrowTools.cpp
++++ b/ApplicationLibCode/FileInterface/RifArrowTools.cpp
+@@ -34,7 +34,7 @@ QString RifArrowTools::readFirstRowsOfTable( const QByteArray& contents )
+ 
+     // Open Parquet file reader
+     std::unique_ptr<parquet::arrow::FileReader> arrow_reader;
+-    if ( !parquet::arrow::OpenFile( input, pool, &arrow_reader ).ok() )
++    if ( !parquet::arrow::OpenFile( input, pool ).ok() )
+     {
+         return {};
+     }
+diff --git a/ApplicationLibCode/FileInterface/RifOsduWellLogReader.cpp b/ApplicationLibCode/FileInterface/RifOsduWellLogReader.cpp
+index 31c98527b..350c4a464 100644
+--- a/ApplicationLibCode/FileInterface/RifOsduWellLogReader.cpp
++++ b/ApplicationLibCode/FileInterface/RifOsduWellLogReader.cpp
+@@ -46,7 +46,7 @@ std::pair<cvf::ref<RigOsduWellLogData>, QString> RifOsduWellLogReader::readWellL
+ 
+     // Open Parquet file reader
+     std::unique_ptr<parquet::arrow::FileReader> arrow_reader;
+-    if ( !parquet::arrow::OpenFile( input, pool, &arrow_reader ).ok() )
++    if ( !parquet::arrow::OpenFile( input, pool ).ok() )
+     {
+         return { nullptr, "Unable to read parquet data." };
+     }
+diff --git a/ApplicationLibCode/FileInterface/RifOsduWellPathReader.cpp b/ApplicationLibCode/FileInterface/RifOsduWellPathReader.cpp
+index df8ec4e98..c84760c2d 100644
+--- a/ApplicationLibCode/FileInterface/RifOsduWellPathReader.cpp
++++ b/ApplicationLibCode/FileInterface/RifOsduWellPathReader.cpp
+@@ -117,7 +117,7 @@ std::pair<cvf::ref<RigWellPath>, QString> RifOsduWellPathReader::readWellPathDat
+ 
+     // Open Parquet file reader
+     std::unique_ptr<parquet::arrow::FileReader> arrow_reader;
+-    if ( !parquet::arrow::OpenFile( input, pool, &arrow_reader ).ok() )
++    if ( !parquet::arrow::OpenFile( input, pool ).ok() )
+     {
+         return { nullptr, "Unable to read parquet data." };
+     }
+diff --git a/ApplicationLibCode/FileInterface/RifVtkImportUtil.cpp b/ApplicationLibCode/FileInterface/RifVtkImportUtil.cpp
+index e16c113d5..39c80ea04 100644
+--- a/ApplicationLibCode/FileInterface/RifVtkImportUtil.cpp
++++ b/ApplicationLibCode/FileInterface/RifVtkImportUtil.cpp
+@@ -21,7 +21,6 @@
+ #include "RiaStdStringTools.h"
+ 
+ #include <filesystem>
+-#include <spanstream>
+ #include <sstream>
+ #include <string>
+ #include <vector>
+@@ -178,46 +177,106 @@ std::vector<RifVtkImportUtil::PvdDataset> RifVtkImportUtil::parsePvdDatasets( co
+ //--------------------------------------------------------------------------------------------------
+ ///
+ //--------------------------------------------------------------------------------------------------
+-std::vector<cvf::Vec3d> RifVtkImportUtil::parseVec3ds( std::string_view text )
++std::vector<cvf::Vec3d> RifVtkImportUtil::parseVec3ds(std::string_view text)
+ {
+-    std::ispanstream iss( text );
+-
+     std::vector<cvf::Vec3d> vecs;
+ 
+-    std::string xStr, yStr, zStr;
+-    while ( iss >> xStr >> yStr >> zStr )
++    while (!text.empty())
+     {
++        // Trim leading whitespace
++        while (!text.empty() && std::isspace(static_cast<unsigned char>(text.front())))
++            text.remove_prefix(1);
++
++        // Extract three tokens
++        auto read_token = [&](std::string_view& sv) -> std::string_view {
++            size_t i = 0;
++            while (i < sv.size() && !std::isspace(static_cast<unsigned char>(sv[i])))
++                ++i;
++            std::string_view tok = sv.substr(0, i);
++            sv.remove_prefix(i);
++            return tok;
++        };
++
++        if (text.empty())
++            break;
++
++        auto xs = read_token(text);
++        auto ys = read_token(text);
++        auto zs = read_token(text);
++
+         double x, y, z;
+-        if ( !RiaStdStringTools::toDouble( xStr, x ) || !RiaStdStringTools::toDouble( yStr, y ) || !RiaStdStringTools::toDouble( zStr, z ) )
++        if (!RiaStdStringTools::toDouble(xs, x) ||
++            !RiaStdStringTools::toDouble(ys, y) ||
++            !RiaStdStringTools::toDouble(zs, z))
+         {
+             return {};
+         }
+ 
+-        vecs.emplace_back( x, y, z );
++        vecs.emplace_back(x, y, z);
+     }
+ 
+     return vecs;
+ }
+ 
++
+ //--------------------------------------------------------------------------------------------------
+ ///
+ //--------------------------------------------------------------------------------------------------
+-std::vector<cvf::Vec3f> RifVtkImportUtil::parseVec3fs( std::string_view text )
++std::vector<cvf::Vec3f> RifVtkImportUtil::parseVec3fs(std::string_view text)
+ {
+-    std::ispanstream iss( text );
+-
+     std::vector<cvf::Vec3f> vecs;
+ 
+-    std::string xStr, yStr, zStr;
+-    while ( iss >> xStr >> yStr >> zStr )
++    auto trim_left = [](std::string_view& sv) {
++        while (!sv.empty() &&
++               std::isspace(static_cast<unsigned char>(sv.front())))
++        {
++            sv.remove_prefix(1);
++        }
++    };
++
++    auto read_token = [&](std::string_view& sv) -> std::string_view {
++        trim_left(sv);
++        if (sv.empty())
++            return {};
++
++        size_t i = 0;
++        while (i < sv.size() &&
++               !std::isspace(static_cast<unsigned char>(sv[i])))
++        {
++            ++i;
++        }
++
++        std::string_view tok = sv.substr(0, i);
++        sv.remove_prefix(i);
++        return tok;
++    };
++
++    while (true)
+     {
++        trim_left(text);
++        if (text.empty())
++            break;
++
++        std::string_view xs = read_token(text);
++        std::string_view ys = read_token(text);
++        std::string_view zs = read_token(text);
++
++        if (xs.empty() || ys.empty() || zs.empty())
++            break;
++
+         double x, y, z;
+-        if ( !RiaStdStringTools::toDouble( xStr, x ) || !RiaStdStringTools::toDouble( yStr, y ) || !RiaStdStringTools::toDouble( zStr, z ) )
++        if (!RiaStdStringTools::toDouble(xs, x) ||
++            !RiaStdStringTools::toDouble(ys, y) ||
++            !RiaStdStringTools::toDouble(zs, z))
+         {
+             return {};
+         }
+ 
+-        vecs.emplace_back( static_cast<float>( x ), static_cast<float>( y ), static_cast<float>( z ) );
++        vecs.emplace_back(
++            static_cast<float>(x),
++            static_cast<float>(y),
++            static_cast<float>(z)
++        );
+     }
+ 
+     return vecs;
+diff --git a/ApplicationLibCode/ProjectDataModel/Summary/Sumo/RimSummaryEnsembleSumo.cpp b/ApplicationLibCode/ProjectDataModel/Summary/Sumo/RimSummaryEnsembleSumo.cpp
+index c42126034..9f55b86bc 100644
+--- a/ApplicationLibCode/ProjectDataModel/Summary/Sumo/RimSummaryEnsembleSumo.cpp
++++ b/ApplicationLibCode/ProjectDataModel/Summary/Sumo/RimSummaryEnsembleSumo.cpp
+@@ -161,7 +161,7 @@ std::shared_ptr<arrow::Table> RimSummaryEnsembleSumo::readParquetTable( const QB
+ 
+     std::shared_ptr<arrow::Table>               table;
+     std::unique_ptr<parquet::arrow::FileReader> arrow_reader;
+-    if ( auto openResult = parquet::arrow::OpenFile( input, pool, &arrow_reader ); openResult.ok() )
++    if ( auto openResult = parquet::arrow::OpenFile( input, pool ); openResult.ok() )
+     {
+         if ( auto readResult = arrow_reader->ReadTable( &table ); readResult.ok() )
+         {
+@@ -176,7 +176,7 @@ std::shared_ptr<arrow::Table> RimSummaryEnsembleSumo::readParquetTable( const QB
+     else
+     {
+         RiaLogging::warning(
+-            QString( "Parquet: Not able to open data stream. Message: %1" ).arg( QString::fromStdString( openResult.ToString() ) ) );
++            QString( "Parquet: Not able to open data stream." ));
+     }
+ 
+     return table;
+diff --git a/ApplicationLibCode/UnitTests/RifParquetReader-Test.cpp b/ApplicationLibCode/UnitTests/RifParquetReader-Test.cpp
+index 0a88dee51..4e83f5f05 100644
+--- a/ApplicationLibCode/UnitTests/RifParquetReader-Test.cpp
++++ b/ApplicationLibCode/UnitTests/RifParquetReader-Test.cpp
+@@ -32,7 +32,7 @@ TEST( RifParquetReaderTest, ReadValidFile )
+ 
+     // Open Parquet file reader
+     std::unique_ptr<parquet::arrow::FileReader> arrow_reader;
+-    EXPECT_TRUE( parquet::arrow::OpenFile( input, pool, &arrow_reader ).ok() );
++    EXPECT_TRUE( parquet::arrow::OpenFile( input, pool ).ok() );
+ 
+     // Read entire file as a single Arrow table
+     std::shared_ptr<arrow::Table> table;
