@@ -1,5 +1,5 @@
 class DuneIstl < Formula
-  desc "Iterative Solver Template Library (ISTL) module of DUNE"
+  desc "Iterative Solver Template Library (ISTL) module of the DUNE framework"
   homepage "https://gitlab.dune-project.org/core/dune-istl"
   url "http://www.dune-project.org/download/2.10.0/dune-istl-2.10.0.tar.gz"
   sha256 "6c39e9fcf97fcd54c158e61d0b67a7422f9fc528540262df58f71d24672e6966"
