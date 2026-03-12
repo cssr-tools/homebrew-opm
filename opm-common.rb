@@ -1,13 +1,15 @@
 class OpmCommon < Formula
   desc "Common utilities for the Open Porous Media (OPM) project"
-  homepage "https://github.com/OPM/opm-common"
-  url "https://github.com/OPM/opm-common/archive/refs/tags/release/2025.10/final.tar.gz"
-  sha256 "adb94a59e73d494cdf3c757171b309d0e19b87e482363ac095a1da2b51263342"
+  homepage "https://opm-project.org"
+  url "https://github.com/OPM/opm-common.git",
+    using:    :git,
+    tag:      "interim_release/2026.02/final",
+    revision: "6994f8b2cb60922ffd8f7d45e952b03ef1858df5"
   license "GPL-3.0-or-later"
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-  depends_on "boost@1.85"
+  depends_on "boost"
   depends_on "suite-sparse"
   depends_on "open-mpi"
   depends_on "metis"

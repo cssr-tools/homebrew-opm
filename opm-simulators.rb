@@ -1,13 +1,15 @@
 class OpmSimulators < Formula
   desc "Reservoir simulation suite of the Open Porous Media (OPM) project"
-  homepage "https://github.com/OPM/opm-simulators"
-  url "https://github.com/OPM/opm-simulators/archive/refs/tags/release/2025.10/final.tar.gz"
-  sha256 "b64fcd186a82ca0c73ed16219b4d0eea187f0b19f30abaf479a2ab953c55d1bd"
+  homepage "https://opm-project.org"
+  url "https://github.com/OPM/opm-simulators.git",
+    using:    :git,
+    tag:      "interim_release/2026.02/final",
+    revision: "be17b4951c6b221b9a5869b43d39a5dcc8dd643a"
   license "GPL-3.0-or-later"
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-  depends_on "boost@1.85"
+  depends_on "boost"
   depends_on "suite-sparse"
   depends_on "open-mpi"
   depends_on "metis"
