@@ -1,13 +1,15 @@
 class OpmGrid < Formula
   desc "Grid handling module of the Open Porous Media (OPM) project"
-  homepage "https://github.com/OPM/opm-grid"
-  url "https://github.com/OPM/opm-grid/archive/refs/tags/release/2025.10/final.tar.gz"
-  sha256 "2c45180351df688d27326d1532cab391e2c61054a877d9c9de1ea8eff61ea526"
+  homepage "https://opm-project.org"
+  url "https://github.com/OPM/opm-grid.git",
+    using:    :git,
+    tag:      "interim_release/2026.02/final",
+    revision: "d7933b8310cab1ae94af8d59495a9fe2409c2e96"
   license "GPL-3.0-or-later"
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-  depends_on "boost@1.85"
+  depends_on "boost"
   depends_on "suite-sparse"
   depends_on "open-mpi"
   depends_on "metis"
