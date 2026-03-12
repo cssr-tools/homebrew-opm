@@ -9,7 +9,7 @@ class Resinsight < Formula
   depends_on "pkg-config" => :build
   depends_on "cmake" => :build
   depends_on "apache-arrow"
-  depends_on "boost@1.85"
+  depends_on "boost"
   depends_on "fast_float"
   depends_on "type-lite"
   depends_on "llvm@20"
