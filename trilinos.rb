@@ -1,8 +1,10 @@
 class Trilinos < Formula
   desc "Collection of numerical libraries for scientific computing"
-  homepage "https://github.com/trilinos/Trilinos"
-  url "https://github.com/trilinos/Trilinos/archive/refs/tags/16.2.0.tar.gz"
-  sha256 "a5dd61e7752b6c0c53e89495aa68e099a5f68b6b775fff49e324c3b177174488"
+  homepage "trilinos.org/"
+  url "https://github.com/trilinos/Trilinos",
+    using:    :git,
+    tag:      "trilinos-release-17-0-0",
+    revision: "8761d20a203e5f627b8f1669f2bd8441e454ff61"
   license "BSD-3-Clause"
 
   depends_on "cmake" => :build

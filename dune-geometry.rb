@@ -1,8 +1,10 @@
 class DuneGeometry < Formula
   desc "Geometry module of the DUNE framework"
-  homepage "https://gitlab.dune-project.org/core/dune-geometry"
-  url "http://www.dune-project.org/download/2.10.0/dune-geometry-2.10.0.tar.gz"
-  sha256 "28e98ac930477e0c93e41d0bec74c472e48b9e9f11f16a07befb8791568b7303"
+  homepage "https://www.dune-project.org"
+  url "https://gitlab.dune-project.org/core/dune-geometry",
+    using:    :git,
+    tag:      "v2.11.0",
+    revision: "7e8ec771779653f7f39962767adf4114e7378d10"
   license "GPL-2.0-or-later"
 
   depends_on "cmake" => :build

@@ -1,8 +1,10 @@
 class DuneGrid < Formula
   desc "Grid module of the DUNE framework"
-  homepage "https://gitlab.dune-project.org/core/dune-grid"
-  url "http://www.dune-project.org/download/2.10.0/dune-grid-2.10.0.tar.gz"
-  sha256 "2feb7c16d75048a80c570773431c587f6d14a4f9fabf7f1ad0a3fbacc7330056"
+  homepage "https://www.dune-project.org"
+  url "https://gitlab.dune-project.org/core/dune-grid",
+    using:    :git,
+    tag:      "v2.11.0",
+    revision: "360045cbc742b79b29ec4c583dbe5560eb066ac0"
   license "GPL-2.0-or-later"
 
   depends_on "cmake" => :build
