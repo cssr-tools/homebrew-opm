@@ -1,8 +1,10 @@
 class DuneIstl < Formula
   desc "Iterative Solver Template Library (ISTL) module of the DUNE framework"
-  homepage "https://gitlab.dune-project.org/core/dune-istl"
-  url "http://www.dune-project.org/download/2.10.0/dune-istl-2.10.0.tar.gz"
-  sha256 "6c39e9fcf97fcd54c158e61d0b67a7422f9fc528540262df58f71d24672e6966"
+  homepage "https://www.dune-project.org"
+  url "https://gitlab.dune-project.org/core/dune-istl",
+    using:    :git,
+    tag:      "v2.11.0",
+    revision: "2e4db0b47b7adae3b824d36709b947b867e730a6"
   license "GPL-2.0-or-later"
 
   depends_on "cmake" => :build
