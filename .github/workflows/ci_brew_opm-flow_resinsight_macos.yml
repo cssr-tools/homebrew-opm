@@ -17,15 +17,15 @@ jobs:
       with:
         python-version: 3.14
 
-    - name: Install OPM Flow
-      run: |
-        brew install cssr-tools/opm/opm-simulators
-        which flow
-
     - name: Install ResInsight
       run: |
         brew install cssr-tools/opm/resinsight
         which resinsight
+
+    - name: Install OPM Flow
+      run: |
+        brew install cssr-tools/opm/opm-simulators
+        which flow
 
     - name: Run OPM Flow (in parallel)
       run: |
