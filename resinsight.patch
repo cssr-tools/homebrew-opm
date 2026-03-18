@@ -275,6 +275,34 @@ index 0a88dee51..4e83f5f05 100644
  
      // Read entire file as a single Arrow table
      std::shared_ptr<arrow::Table> table;
+diff --git a/ApplicationLibCode/UserInterface/RiuMainWindow.cpp b/ApplicationLibCode/UserInterface/RiuMainWindow.cpp
+index af2a1579c..f3dca7e0e 100644
+--- a/ApplicationLibCode/UserInterface/RiuMainWindow.cpp
++++ b/ApplicationLibCode/UserInterface/RiuMainWindow.cpp
+@@ -147,6 +147,9 @@ RiuMainWindow::RiuMainWindow()
+     createMenus();
+     createToolBars();
+     createDockPanels();
++    // Pre-populate the Windows menu so it is not empty on creation. On macOS, the native menu bar
++    // hides empty menus, preventing the aboutToShow signal from ever firing.
++    slotBuildWindowActions();
+ 
+     setAcceptDrops( true );
+ 
+diff --git a/ApplicationLibCode/UserInterface/RiuPlotMainWindow.cpp b/ApplicationLibCode/UserInterface/RiuPlotMainWindow.cpp
+index f5b26a49f..52904a825 100644
+--- a/ApplicationLibCode/UserInterface/RiuPlotMainWindow.cpp
++++ b/ApplicationLibCode/UserInterface/RiuPlotMainWindow.cpp
+@@ -132,6 +132,9 @@ RiuPlotMainWindow::RiuPlotMainWindow()
+     createMenus();
+     createToolBars();
+     createDockPanels();
++    // Pre-populate the Windows menu so it is not empty on creation. On macOS, the native menu bar
++    // hides empty menus, preventing the aboutToShow signal from ever firing.
++    slotBuildWindowActions()
+ 
+     setAcceptDrops( true );
+ 
 diff --git a/ThirdParty/NRLib/CMakeLists.txt b/ThirdParty/NRLib/CMakeLists.txt
 index 858365e8a..f9c700e3e 100644
 --- a/ThirdParty/NRLib/CMakeLists.txt
