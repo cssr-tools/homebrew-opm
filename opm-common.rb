@@ -1,10 +1,10 @@
 class OpmCommon < Formula
   desc "Common utilities for the Open Porous Media (OPM) project"
   homepage "https://opm-project.org"
-  url "https://github.com/OPM/opm-common.git",
+  url "https://github.com/OPM/opm-common",
     using:    :git,
-    tag:      "interim_release/2026.02/final",
-    revision: "6994f8b2cb60922ffd8f7d45e952b03ef1858df5"
+    tag:      "release/2026.04/final",
+    revision: "0ea62974f24d70fc2b3e30d6aae8b76ef000dac1"
   license "GPL-3.0-or-later"
 
   depends_on "cmake" => :build

@@ -1,8 +1,10 @@
 class TypeLite < Formula
   desc "Strong types for C++98, C++11 and later (header-only)"
   homepage "https://github.com/nonstd-lite/type-lite"
-  url "https://github.com/nonstd-lite/type-lite/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "47d6f78c3e8588f0a63e86c357d0d9e83543d754334df9dece7a4242047aea37"
+  url "https://github.com/nonstd-lite/type-lite",
+    using:    :git,
+    tag:      "v0.2.0",
+    revision: "edce3fb26f53ef9b2f8a35b8825d10c5f5e8443f"
   license "BSL-1.0"
 
   depends_on "cmake" => :build

@@ -1,10 +1,10 @@
 class OpmGrid < Formula
   desc "Grid handling module of the Open Porous Media (OPM) project"
   homepage "https://opm-project.org"
-  url "https://github.com/OPM/opm-grid.git",
+  url "https://github.com/OPM/opm-grid",
     using:    :git,
-    tag:      "interim_release/2026.02/final",
-    revision: "d7933b8310cab1ae94af8d59495a9fe2409c2e96"
+    tag:      "release/2026.04/final",
+    revision: "d6a1a35c3d770fe50073b9ed866bbec740c8faac"
   license "GPL-3.0-or-later"
 
   depends_on "cmake" => :build
