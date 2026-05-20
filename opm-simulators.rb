@@ -1,10 +1,10 @@
 class OpmSimulators < Formula
   desc "Reservoir simulation suite of the Open Porous Media (OPM) project"
   homepage "https://opm-project.org"
-  url "https://github.com/OPM/opm-simulators.git",
+  url "https://github.com/OPM/opm-simulators",
     using:    :git,
-    tag:      "interim_release/2026.02/final",
-    revision: "be17b4951c6b221b9a5869b43d39a5dcc8dd643a"
+    tag:      "release/2026.04/final",
+    revision: "b82f21dba405286c4c4446614dd3bf9cdebf7a2c"
   license "GPL-3.0-or-later"
 
   depends_on "cmake" => :build

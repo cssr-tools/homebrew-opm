@@ -1,7 +1,7 @@
 class Resinsight < Formula
   desc "3D viewer and post processing of reservoir models"
   homepage "https://resinsight.org"
-  url "https://github.com/OPM/ResInsight.git",
+  url "https://github.com/OPM/ResInsight",
     using:    :git,
     tag:      "v2025.12.0",
     revision: "57430b5c6b1099d82e722e12ff087469a8d10d65"
