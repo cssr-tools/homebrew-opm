@@ -32,7 +32,8 @@ class OpmSimulators < Formula
              "-DCMAKE_BUILD_TYPE=Release",
              "-DPYTHON_EXECUTABLE=#{HOMEBREW_PREFIX}/bin/python3",
              "-DOPM_ENABLE_PYTHON=ON",
-             "-DOPM_ENABLE_EMBEDDED_PYTHON=ON"
+             "-DOPM_ENABLE_EMBEDDED_PYTHON=ON",
+             "-DUSE_GPU_BRIDGE=0"
       system "make", "flow"
       system "make", "install"
     end
