@@ -1,10 +1,11 @@
 name: Install OPM Flow and ResInsight in macOS using brew
 
 on:
- push:
-   branches:
-     - main
-   
+  push:
+    branches:
+      - main
+  pull_request:
+
 jobs:
   install-resinsight-flow-macOS-local:
     permissions:
@@ -12,34 +13,41 @@ jobs:
         pull-requests: write
     timeout-minutes: 120
     runs-on: macos-26
+
     steps:
+      - name: Checkout tap repository (PR)
+        uses: actions/checkout@v4
 
-    - name: Set up Python 3.14
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.14
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
 
-    - name: Install OPM Flow
-      run: |
-        brew install cssr-tools/opm/opm-simulators
-        which flow
+      - name: Tap local Homebrew repo (PR version)
+        run: |
+          brew tap cssr-tools/opm $PWD
 
-    - name: Install ResInsight
-      run: |
-        brew install cssr-tools/opm/resinsight
-        which resinsight
+      - name: Install OPM Flow (from PR)
+        run: |
+          brew install opm-simulators
+          which flow
 
-    - name: Run OPM Flow (in parallel)
-      run: |
-        curl -O https://raw.githubusercontent.com/OPM/opm-tests/refs/heads/master/spe1/SPE1CASE1.DATA
-        mpirun -np 2 flow SPE1CASE1.DATA --output-dir=flow_spe1case1
+      - name: Install ResInsight (from PR)
+        run: |
+          brew install resinsight
+          which resinsight
 
-    - name: Check if OPM Flow succeeded
-      run: |
-        file="/Users/runner/work/homebrew-opm/homebrew-opm/flow_spe1case1/SPE1CASE1.UNRST"
-        if [[ -f "$file" ]]; then
-          echo "The installation of OPM Flow succeeded"
-        else
-          echo "The installation of OPM Flow failed"
-          exit 1
-        fi
+      - name: Run OPM Flow (parallel)
+        run: |
+          curl -O https://raw.githubusercontent.com/OPM/opm-tests/master/spe1/SPE1CASE1.DATA
+          mpirun -np 2 flow SPE1CASE1.DATA --output-dir=flow_spe1case1
+
+      - name: Check if OPM Flow succeeded
+        run: |
+          file="$PWD/flow_spe1case1/SPE1CASE1.UNRST"
+          if [[ -f "$file" ]]; then
+            echo "The installation of OPM Flow succeeded"
+          else
+            echo "The installation of OPM Flow failed"
+            exit 1
+          fi
