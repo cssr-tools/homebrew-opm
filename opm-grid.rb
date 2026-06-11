@@ -15,6 +15,7 @@ class OpmGrid < Formula
   depends_on "metis"
   depends_on "openblas"
   depends_on "cjson"
+  depends_on "hdf5"
   depends_on "dune-common"
   depends_on "dune-geometry"
   depends_on "dune-grid"
