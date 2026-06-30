@@ -26,6 +26,8 @@ class OpmCommon < Formula
   depends_on "pybind11"
 
   def install
+    inreplace buildpath/"opm/input/eclipse/EclipseState/InitConfig/Equil.cpp", "#include <fmt/core.h>", "#include <fmt/format.h>"
+    inreplace buildpath/"opm/input/eclipse/Schedule/Group/GuideRate.cpp", "#include <fmt/core.h>", "#include <fmt/format.h>"
     mkdir "build" do
       system "cmake", "..", *std_cmake_args,
              "-DWITH_NDEBUG=1",

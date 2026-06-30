@@ -3,8 +3,8 @@ class Trilinos < Formula
   homepage "trilinos.org/"
   url "https://github.com/trilinos/Trilinos",
     using:    :git,
-    tag:      "trilinos-release-17-1-0",
-    revision: "6eff987504144a20ce3e94346a689306a8230705"
+    tag:      "trilinos-release-17-1-1",
+    revision: "8e7286cc842cfb2a614f407e63dffd3e1fcea1bc"
   license "BSD-3-Clause"
 
   depends_on "cmake" => :build
