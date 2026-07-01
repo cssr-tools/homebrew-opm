@@ -1,9 +1,6 @@
 name: Install OPM Flow and ResInsight in macOS using brew
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
 
 jobs:
@@ -26,16 +23,17 @@ jobs:
       - name: Tap local Homebrew repo (PR version)
         run: |
           brew tap cssr-tools/opm $PWD
-
-      - name: Install OPM Flow (from PR)
-        run: |
-          brew install opm-simulators
-          which flow
+          brew trust cssr-tools/opm
 
       - name: Install ResInsight (from PR)
         run: |
-          brew install resinsight
+          brew install resinsight -y
           which resinsight
+
+      - name: Install OPM Flow (from PR)
+        run: |
+          brew install opm-simulators -y
+          which flow
 
       - name: Run OPM Flow (parallel)
         run: |

@@ -3,12 +3,14 @@
 
 # Installing ResInsight and OPM Flow with support for mpirun in macOS using brew
 
-This repository uses [_brew_](https://brew.sh) to build [_ResInsight_](https://resinsight.org) (v2025.12.0) and [_OPM Flow_](https://opm-project.org/?page_id=19) (v2026.04) in macOS Tahoe in GitHub Actions, showing the status and details of the build in the [_Actions_](https://github.com/cssr-tools/homebrew-opm/actions).
+This repository uses [_brew_](https://brew.sh) to build [_ResInsight_](https://resinsight.org) (v2026.06.1) and [_OPM Flow_](https://opm-project.org/?page_id=19) (v2026.04) in macOS Tahoe in GitHub Actions, showing the status and details of the build in the [_Actions_](https://github.com/cssr-tools/homebrew-opm/actions).
 See [_this script_](https://github.com/cssr-tools/homebrew-opm/blob/main/.github/workflows/ci_brew_opm-flow_resinsight_macos.yml) that is run in GitHub actions.
 
 ```bash
-brew install cssr-tools/opm/opm-simulators
-brew install cssr-tools/opm/resinsight
+brew tap cssr-tools/opm
+brew trust cssr-tools/opm
+brew install cssr-tools/opm/opm-simulators -y
+brew install cssr-tools/opm/resinsight -y
 ```
 
 After you execute the above lines, you can check if the installation of OPM Flow succeded by typing in the terminal `flow --help`, and ResInsight is launched by typing `resinsight`.
