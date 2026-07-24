@@ -3,8 +3,8 @@ class OpmCommon < Formula
   homepage "https://opm-project.org"
   url "https://github.com/OPM/opm-common",
     using:    :git,
-    tag:      "release/2026.04/final",
-    revision: "0ea62974f24d70fc2b3e30d6aae8b76ef000dac1"
+    tag:      "interim_release/2026.07/final",
+    revision: "c776db2f6a82828ecb76bf3e418b4428f741c9af"
   license "GPL-3.0-or-later"
 
   depends_on "cmake" => :build
@@ -26,8 +26,6 @@ class OpmCommon < Formula
   depends_on "pybind11"
 
   def install
-    inreplace buildpath/"opm/input/eclipse/EclipseState/InitConfig/Equil.cpp", "#include <fmt/core.h>", "#include <fmt/format.h>"
-    inreplace buildpath/"opm/input/eclipse/Schedule/Group/GuideRate.cpp", "#include <fmt/core.h>", "#include <fmt/format.h>"
     mkdir "build" do
       system "cmake", "..", *std_cmake_args,
              "-DWITH_NDEBUG=1",

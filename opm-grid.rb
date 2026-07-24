@@ -3,8 +3,8 @@ class OpmGrid < Formula
   homepage "https://opm-project.org"
   url "https://github.com/OPM/opm-grid",
     using:    :git,
-    tag:      "release/2026.04/final",
-    revision: "d6a1a35c3d770fe50073b9ed866bbec740c8faac"
+    tag:      "interim_release/2026.07/final",
+    revision: "96a60c533729c9e803a7ba8a9deeefb92f456b6a"
   license "GPL-3.0-or-later"
 
   depends_on "cmake" => :build

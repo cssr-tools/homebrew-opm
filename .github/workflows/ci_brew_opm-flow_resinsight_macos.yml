@@ -7,28 +7,18 @@ jobs:
   install-resinsight-flow-macOS-local:
     permissions:
         contents: read
-        pull-requests: write
     timeout-minutes: 120
     runs-on: macos-26
+    env:
+      HOMEBREW_NO_REQUIRE_TAP_TRUST: "1"
 
     steps:
-      - name: Checkout tap repository (PR)
-        uses: actions/checkout@v4
-
-      - name: Set up Python 3.14
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.14"
+      - uses: actions/checkout@v5
 
       - name: Tap local Homebrew repo (PR version)
         run: |
           brew tap cssr-tools/opm $PWD
           brew trust cssr-tools/opm
-
-      - name: Install ResInsight (from PR)
-        run: |
-          brew install resinsight -y
-          which resinsight
 
       - name: Install OPM Flow (from PR)
         run: |
@@ -49,3 +39,8 @@ jobs:
             echo "The installation of OPM Flow failed"
             exit 1
           fi
+
+      - name: Install ResInsight (from PR)
+        run: |
+          brew install resinsight -y
+          which resinsight

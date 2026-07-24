@@ -3,8 +3,8 @@ class OpmSimulators < Formula
   homepage "https://opm-project.org"
   url "https://github.com/OPM/opm-simulators",
     using:    :git,
-    tag:      "release/2026.04/final",
-    revision: "b82f21dba405286c4c4446614dd3bf9cdebf7a2c"
+    tag:      "interim_release/2026.07/final",
+    revision: "b2b26baa1bd1b178a69f1797d4ab2b643bdcf063"
   license "GPL-3.0-or-later"
 
   depends_on "cmake" => :build
