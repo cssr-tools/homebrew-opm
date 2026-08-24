@@ -1,7 +1,7 @@
 class DuneCommon < Formula
   desc "Core module of the DUNE framework"
   homepage "https://www.dune-project.org"
-  url "https://gitlab.dune-project.org/core/dune-common",
+  url "https://github.com/dune-project/dune-common",
     using:    :git,
     tag:      "v2.11.0",
     revision: "16498181dbadc34bdaf2f424458aa5201e6a95ce"

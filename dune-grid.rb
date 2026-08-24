@@ -1,7 +1,7 @@
 class DuneGrid < Formula
   desc "Grid module of the DUNE framework"
   homepage "https://www.dune-project.org"
-  url "https://gitlab.dune-project.org/core/dune-grid",
+  url "https://github.com/dune-project/dune-grid",
     using:    :git,
     tag:      "v2.11.0",
     revision: "360045cbc742b79b29ec4c583dbe5560eb066ac0"
