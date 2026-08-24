@@ -1,7 +1,7 @@
 class DuneIstl < Formula
   desc "Iterative Solver Template Library (ISTL) module of the DUNE framework"
   homepage "https://www.dune-project.org"
-  url "https://gitlab.dune-project.org/core/dune-istl",
+  url "https://github.com/dune-project/dune-istl",
     using:    :git,
     tag:      "v2.11.0",
     revision: "2e4db0b47b7adae3b824d36709b947b867e730a6"
