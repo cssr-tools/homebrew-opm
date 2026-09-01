@@ -20,6 +20,11 @@ jobs:
           brew tap cssr-tools/opm $PWD
           brew trust cssr-tools/opm
 
+      - name: Install ResInsight (from PR)
+        run: |
+          brew install resinsight -y
+          which resinsight
+
       - name: Install OPM Flow (from PR)
         run: |
           brew install opm-simulators -y
@@ -39,8 +44,3 @@ jobs:
             echo "The installation of OPM Flow failed"
             exit 1
           fi
-
-      - name: Install ResInsight (from PR)
-        run: |
-          brew install resinsight -y
-          which resinsight
