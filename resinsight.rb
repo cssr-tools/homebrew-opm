@@ -3,8 +3,8 @@ class Resinsight < Formula
   homepage "https://resinsight.org"
   url "https://github.com/OPM/ResInsight",
     using:    :git,
-    tag:      "v2026.06.1",
-    revision: "6913dfd3201deead2a60f818d33dfa1efc49a426"
+    tag:      "v2026.09.0",
+    revision: "197d58a750dd0bc243025b3939ab2a8a01a2c709"
   license "GPL-3.0-or-later"
   depends_on "pkg-config" => :build
   depends_on "cmake" => :build
